@@ -5,6 +5,11 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager, create_access_token
+
+app = Flask(__name__)
+app.config["JWT_SECRET_KEY"] = "super-secret"  # Cambia esto por una clave segura
+jwt = JWTManager(app)
 
 api = Blueprint('api', __name__)
 
@@ -20,3 +25,9 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+# Registrar el blueprint en la app principal
+app.register_blueprint(api, url_prefix='/api')
+
+if __name__ == "__main__":
+    app.run(debug=True)
